@@ -28,11 +28,11 @@ jobs:
       - name: Install dependencies
         run: |
           source venv/bin/activate
-          pip install -r backend/requirements.txt
+          pip install -r requirements.txt  # ✅ 修正箇所
 
       - name: Zip artifact for deployment
         run: |
-          zip -r release.zip backend/*
+          zip -r release.zip . -x "venv/*"  # ✅ 修正：全体をzipしつつvenv除外
 
       - name: Upload artifact for deployment jobs
         uses: actions/upload-artifact@v4
@@ -40,7 +40,6 @@ jobs:
           name: python-app
           path: |
             release.zip
-            !venv/
 
   back-deploy:
     runs-on: ubuntu-latest
@@ -66,11 +65,6 @@ jobs:
 
       - name: Unzip artifact for deployment
         run: unzip release.zip
-      
-      - name: Move files to deployment root
-        run: |
-          mv backend/* . || true
-          rm -rf backend || true
 
       - name: Wait before deploy (for avoiding 409 Conflict)
         run: sleep 15
@@ -79,7 +73,7 @@ jobs:
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
         with:
-          app-name: 'app-step4-46'  # ✅ 修正ここ
+          app-name: 'app-step4-46'
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_APP_STEP4_46 }}
           package: '.'
