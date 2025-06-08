@@ -18,7 +18,7 @@ class Transaction(Base):
     store_cd = Column(CHAR(5))
     pos_no = Column(CHAR(5))
     total_amt = Column(Integer)
-    ttl_amt_ex_tax = Column(Integer)  # ✅ 追加されたカラム（税抜合計金額）
+    ttl_amt_ex_tax = Column(Integer)
 
     details = relationship("TransactionDetail", back_populates="transaction")
 
@@ -27,12 +27,12 @@ class TransactionDetail(Base):
     id = Column(Integer, primary_key=True, index=True)
     trd_id = Column(Integer, ForeignKey("transaction.trd_id"))
 
-    dtl_id = Column(Integer)  # ✅ 追加（明細番号などに使用する場合）
+    dtl_id = Column(Integer)
 
     prd_id = Column(CHAR(13))
     prd_code = Column(String(50))
     prd_name = Column(String(100))
     prd_price = Column(Integer)
-    tax_cd = Column(CHAR(2))  # 必要であればこれも追加
+    tax_cd = Column(CHAR(2))
 
     transaction = relationship("Transaction", back_populates="details")

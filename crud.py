@@ -2,7 +2,7 @@ from sqlalchemy.orm import Session
 from models import ProductMaster, Transaction, TransactionDetail
 from schemas import PurchaseRequest
 
-TAX_RATE = 0.1  # 消費税10%
+TAX_RATE = 0.1
 
 def get_product_by_code(db: Session, code: str):
     return db.query(ProductMaster).filter(ProductMaster.code == code).first()
@@ -15,11 +15,11 @@ def register_purchase(db: Session, req: PurchaseRequest):
         emp_cd=req.emp_cd,
         store_cd=req.store_cd,
         pos_no=req.pos_no,
-        total_amt=0,         # 後で更新
-        ttl_amt_ex_tax=0     # 後で更新
+        total_amt=0,
+        ttl_amt_ex_tax=0
     )
     db.add(trx)
-    db.flush()  # trd_id を取得
+    db.flush()
 
     for idx, item in enumerate(req.items, start=1):
         total += item.prd_price
@@ -33,7 +33,7 @@ def register_purchase(db: Session, req: PurchaseRequest):
             prd_code=item.prd_code,
             prd_name=item.prd_name,
             prd_price=item.prd_price,
-            tax_cd="10"  # 消費税10%固定
+            tax_cd="10"
         )
         db.add(detail)
 

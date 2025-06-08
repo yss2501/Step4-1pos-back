@@ -4,7 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from database import SessionLocal
 import crud, schemas
 import os
-import traceback  # ← 追加
+import traceback
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -31,7 +31,7 @@ def read_product(code: str, db: Session = Depends(get_db)):
     if not product:
         raise HTTPException(status_code=404, detail="商品が見つかりません")
     return {
-        "prd_id": str(product.prd_id),  # ✅ 明示的に文字列へ
+        "prd_id": str(product.prd_id),
         "code": product.code,
         "name": product.name,
         "price": product.price,
@@ -48,5 +48,5 @@ def purchase(req: schemas.PurchaseRequest, db: Session = Depends(get_db)):
         }
     except Exception as e:
         print("❗例外発生:", e)
-        traceback.print_exc()  # ← コンソールにスタックトレースを出力
+        traceback.print_exc()
         raise HTTPException(status_code=500, detail=str(e))
